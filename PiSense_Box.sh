@@ -328,7 +328,7 @@ sudo tee -a /var/www/html/index.html << EOF
 <Content-type: text/html>
 
 <html>
-<meta http-equiv="refresh" content="4\;url=index.html" />
+<meta http-equiv="refresh" content="4;url=index.html" />
 <head>
 <style>
 body {
