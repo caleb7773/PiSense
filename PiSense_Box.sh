@@ -11,11 +11,13 @@ sudo systemctl restart apache2
 sudo usermod -aG sudo www-data
 
 # Create CGI Script
-sudo tee -a /usr/lib/cgi-bin/third.cgi << EOF
+sudo tee -a /usr/lib/cgi-bin/wanip.cgi << EOF
 #!/bin/bash
 echo "Content-type: text/html"
 echo ""
-echo "<html><head><title>WAN IP"
+echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
+echo "<head><title>WAN IP"
 echo "</title></head><body>"
 
 echo "<h1>IP Information</h1>"
@@ -40,7 +42,7 @@ EOF
 
 
 # Give it execute rights
-sudo chmod +x /usr/lib/cgi-bin/third.cgi
+sudo chmod +x /usr/lib/cgi-bin/wanip.cgi
 
 # Generate Service Script
 sudo tee -a /usr/lib/cgi-bin/sshon.cgi << EOF
@@ -213,6 +215,7 @@ sudo tee -a /usr/lib/cgi-bin/pubip.cgi << EOF
 echo "Content-type: text/html"
 echo ""
 echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
 echo "<head><title>Public IP"
 echo "</title></head><body>"
 
@@ -238,6 +241,7 @@ sudo tee -a /usr/lib/cgi-bin/shutdown.cgi << EOF
 echo "Content-type: text/html"
 echo ""
 echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
 echo "<head><title>Shutdown"
 echo "</title></head><body>"
 
@@ -261,6 +265,7 @@ sudo tee -a /usr/lib/cgi-bin/reboot.cgi << EOF
 echo "Content-type: text/html"
 echo ""
 echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
 echo "<head><title>Rebooting"
 echo "</title></head><body>"
 
@@ -284,6 +289,7 @@ sudo tee -a /usr/lib/cgi-bin/bypass.cgi << EOF
 echo "Content-type: text/html"
 echo ""
 echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
 echo "<head><title>Bypass"
 echo "</title></head><body>"
 
@@ -322,11 +328,19 @@ sudo tee -a /var/www/html/index.html << EOF
 <Content-type: text/html>
 
 <html>
-<head><title>PiSense</title></head>
+<meta http-equiv="refresh" content="4\;url=index.html" />
+<head>
+<style>
+body {
+  background-color: #7CFC00;
+}
+<title>PiSense</title>
+</style>
+</head>
 <body>
 <h1>Welcome to PiSense</h1>
 <br>
-<a href="./cgi-bin/third.cgi">WAN IP Information</a>
+<a href="./cgi-bin/wanip.cgi">WAN IP Information</a>
 <br>
 <a href="./cgi-bin/pubip.cgi">What is my Public IP</a>
 <br>
@@ -352,8 +366,11 @@ sudo tee -a /var/www/html/index.html << EOF
 EOF
 
 
+# Green to Red Background
+sudo sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html
 
-
+# Red to Green Background
+sudo sed -i 's/FF0000/7CFC00/g' /var/www/html/index.html
 
 
 # Set Hostname
