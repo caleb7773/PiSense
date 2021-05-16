@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set Hostname
+sudo hostnamectl set-hostname PiSense
+
 # Enable CGI Scripts on Apache
 sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
 sudo systemctl enable apache2
@@ -273,6 +276,56 @@ EOF
 # Give it execute rights
 sudo chmod +x /usr/lib/cgi-bin/reboot.cgi
 
+# Generate Service Script
+sudo tee -a /usr/lib/cgi-bin/bypass.cgi << EOF
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo "<html>"
+echo "<head><title>Bypass"
+echo "</title></head><body>"
+
+
+echo "<h1> VPN Bypass </h1>"
+echo "\$(sudo iptables -t nat -D POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE)"
+echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE)"
+echo "<br>"
+echo "\$(date)"
+echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
+
+echo ""
+echo "</body></html>"
+EOF
+
+# Give it execute rights
+sudo chmod +x /usr/lib/cgi-bin/bypass.cgi
+
+
+# Generate Service Script
+sudo tee -a /usr/lib/cgi-bin/gosecure.cgi << EOF
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo "<html>"
+echo "<head><title>Go Secure"
+echo "</title></head><body>"
+
+
+echo "<h1> Going Secure </h1>"
+echo "\$(sudo iptables -t nat -D POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE)"
+echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE)"
+echo "<br>"
+echo "\$(date)"
+echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
+
+echo ""
+echo "</body></html>"
+EOF
+
+# Give it execute rights
+sudo chmod +x /usr/lib/cgi-bin/gosecure.cgi
+
+
 # Restart the apache service
 sudo systemctl restart apache2
 
@@ -281,6 +334,8 @@ echo '' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start ssh, /usr/bin/systemctl stop ssh, /usr/bin/systemctl status ssh' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start openvpn@client1, /usr/bin/systemctl stop openvpn@client1, /usr/bin/systemctl status openvpn@client1' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/shutdown -h now, /usr/sbin/reboot' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -D POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -D POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
 
 # Delete default HTML index file
 sudo rm -rf /var/www/html/index.html
@@ -302,7 +357,11 @@ sudo tee -a /var/www/html/index.html << EOF
 <br>
 <a href="./cgi-bin/vpnon.cgi">Turn VPN On</a> (autostart by default)
 <br>
+<a href="./cgi-bin/gosecure.cgi">Force VPN Use</a> (enabled by default)
+<br>
 <a href="./cgi-bin/vpnoff.cgi">Turn VPN Off</a>
+<br>
+<a href="./cgi-bin/bypass.cgi">Allow VPN Bypass</a>
 <br>
 <a href="./cgi-bin/sshstat.cgi">SSH Status</a>
 <br>
