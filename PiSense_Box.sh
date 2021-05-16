@@ -13,26 +13,24 @@ echo "<html><head><title>Bash as CGI"
 echo "</title></head><body>"
 
 echo "<h1>IP Information</h1>"
-echo "$(ifconfig | grep -A 1 eth1 | grep inet > /tmp/ip)"
-echo "$(sed -i 's/netmask.*$//g' /tmp/ip)"
-echo "$(sed -i 's/inet //g' /tmp/ip)"
+echo "\$(ifconfig | grep eth0 > /tmp/int)"
+echo "\$(ifconfig | grep -A 1 eth0 | grep inet > /tmp/ip)"
+echo "\$(sed -i 's/netmask.*\$//g' /tmp/ip)"
+echo "\$(sed -i 's/inet //g' /tmp/ip)"
 
 echo "<h2> Interface </h2>"
-echo "$(cat /tmp/int | cut -d ':' -f1)"
+echo "\$(cat /tmp/int | cut -d ':' -f1)"
 echo "<br>"
 echo "<h2> IP </h2>"
-echo "$(cat /tmp/ip)"
+echo "\$(cat /tmp/ip)"
 echo "<br>"
 echo "<br>"
 echo "<br>"
-echo "$(date)"
+echo "\$(date)"
 echo ""
 
 echo "</body></html>"
 EOF
-
-
-
 
 
 # Give it execute rights
