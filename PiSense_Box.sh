@@ -47,7 +47,7 @@ echo "<head><title>Bash as CGI"
 echo "</title></head><body>"
 
 
-echo "<h0> SSH Status </h1>"
+echo "<h1> SSH Status </h1>"
 echo "$(sudo systemctl start ssh)"
 echo "$(sudo systemctl status ssh | grep 'Active:')"
 
