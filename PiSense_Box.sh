@@ -110,6 +110,7 @@ echo "</title></head><body>"
 
 
 echo "<h1> VPN Status </h1>"
+echo "\$(sudo sed -i 's/FF0000/7CFC00/g' /var/www/html/index.html)"
 echo "\$(sudo iptables -t nat -F POSTROUTING)"
 echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE)"
 echo "\$(sudo systemctl start openvpn@client1)"
@@ -139,7 +140,7 @@ echo "</title></head><body>"
 
 
 echo "<h1> VPN Status </h1>"
-
+echo "\$(sudo sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html)"
 echo "\$(sudo systemctl stop openvpn@client1)"
 echo "\$(sudo systemctl status openvpn@client1 | grep 'Active:')"
 
@@ -319,6 +320,8 @@ echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start openvpn@client1, /usr/bin
 echo '%www-data ALL=NOPASSWD: /usr/sbin/shutdown -h now, /usr/sbin/reboot' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -F POSTROUTING' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/FF0000/7CFC00/g' /var/www/html/index.html' | sudo EDITOR='tee -a' visudo
 
 # Delete default HTML index file
 sudo rm -rf /var/www/html/index.html
