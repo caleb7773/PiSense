@@ -296,6 +296,9 @@ echo "</title></head><body>"
 
 
 echo "<h1> VPN Bypass </h1>"
+echo "\$(sudo sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html)"
+echo "\$(sudo systemctl stop openvpn@client1)"
+echo "\$(sudo systemctl status openvpn@client1 | grep 'Active:')"
 echo "\$(sudo iptables -t nat -F POSTROUTING)"
 echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE)"
 echo "<br>"
