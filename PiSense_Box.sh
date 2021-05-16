@@ -370,10 +370,10 @@ EOF
 
 
 # Green to Red Background
-sudo sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html
+#sudo sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html
 
 # Red to Green Background
-sudo sed -i 's/FF0000/7CFC00/g' /var/www/html/index.html
+#sudo sed -i 's/FF0000/7CFC00/g' /var/www/html/index.html
 
 
 # Set Hostname
