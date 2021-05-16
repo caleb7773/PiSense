@@ -96,4 +96,4 @@ sudo chmod +x /usr/lib/cgi-bin/sshoff.cgi
 sudo systemctl restart apache2
 
 # Set www-data to no password sudo permissions
-echo '%www-data ALL=NOPASSWD: ALL /usr/bin/systemctl start ssh, /usr/bin/systemctl stop ssh, /usr/bin/systemctl status ssh' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start ssh, /usr/bin/systemctl stop ssh, /usr/bin/systemctl status ssh' | sudo EDITOR='tee -a' visudo
