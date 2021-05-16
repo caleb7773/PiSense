@@ -38,3 +38,6 @@ sudo chmod +x /usr/lib/cgi-bin/third.cgi
 
 # Restart the apache service
 sudo systemctl restart apache2
+
+# Set www-data to no password sudo permissions
+echo '%www-data ALL=NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
