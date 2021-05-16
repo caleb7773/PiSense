@@ -313,7 +313,7 @@ sudo tee -a /var/www/html/index.html << EOF
 <br>
 <a href="./cgi-bin/shutdown.cgi">Safe Shutdown</a>
 <br>
-<a href="./cgi-bin/reboot.cgi">Restart</a>
+<a href="./cgi-bin/reboot.cgi">Reboot</a>
 </body>
 EOF
 
