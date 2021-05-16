@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Set Hostname
-sudo hostnamectl set-hostname PiSense
+
 
 # Enable CGI Scripts on Apache
 sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
@@ -381,4 +380,6 @@ EOF
 
 
 
-
+# Set Hostname
+sudo hostnamectl set-hostname PiSense
+sudo sed -i 's/kali/PiSense/g' /etc/hosts
