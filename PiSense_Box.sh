@@ -63,6 +63,35 @@ EOF
 # Give it execute rights
 sudo chmod +x /usr/lib/cgi-bin/sshon.cgi
 
+# Generate Service Script
+sudo tee -a /usr/lib/cgi-bin/sshoff.cgi << EOF
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=http://localhost/" />"
+echo "<head><title>Bash as CGI"
+echo "</title></head><body>"
+
+
+echo "<h1> SSH Status </h1>"
+echo "$(sudo systemctl stop ssh)"
+echo "$(sudo systemctl status ssh | grep 'Active:')"
+
+echo "<br>"
+echo "<br>"
+echo "$(date)"
+echo "<h2><a href="http://localhost">Click here to return</a></h3>"
+
+echo ""
+echo "</body></html>"
+EOF
+
+# Give it execute rights
+sudo chmod +x /usr/lib/cgi-bin/sshoff.cgi
+
+
+
 # Restart the apache service
 sudo systemctl restart apache2
 
