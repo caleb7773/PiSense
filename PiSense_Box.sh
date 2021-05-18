@@ -110,7 +110,7 @@ echo "</title></head><body>"
 
 
 echo "<h1> VPN Status </h1>"
-echo "\$(sudo sed -i 's/FF0000/7CFC00/g' /var/www/html/index.html)"
+echo "\$(sudo sed -i 's/FF0000/7CFC00/g' /usr/lib/cgi-bin/wanipsimple.cgi)"
 echo "\$(sudo iptables -t nat -F POSTROUTING)"
 echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE)"
 echo "\$(sudo systemctl start openvpn@client1)"
@@ -140,7 +140,7 @@ echo "</title></head><body>"
 
 
 echo "<h1> VPN Status </h1>"
-echo "\$(sudo sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html)"
+echo "\$(sudo sed -i 's/7CFC00/FF0000/g' /usr/lib/cgi-bin/wanipsimple.cgi)"
 echo "\$(sudo systemctl stop openvpn@client1)"
 echo "\$(sudo systemctl status openvpn@client1 | grep 'Active:')"
 
@@ -296,7 +296,7 @@ echo "</title></head><body>"
 
 
 echo "<h1> VPN Bypass </h1>"
-echo "\$(sudo sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html)"
+echo "\$(sudo sed -i 's/7CFC00/FF0000/g' /usr/lib/cgi-bin/wanipsimple.cgi)"
 echo "\$(sudo systemctl stop openvpn@client1)"
 echo "\$(sudo systemctl status openvpn@client1 | grep 'Active:')"
 echo "\$(sudo iptables -t nat -F POSTROUTING)"
@@ -312,6 +312,45 @@ EOF
 # Give it execute rights
 sudo chmod +x /usr/lib/cgi-bin/bypass.cgi
 
+# Generate Service Script
+sudo tee -a /usr/lib/cgi-bin/wanipsimple.cgi << EOF
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo "<html>"
+echo "<head><title>WAN IP"
+echo "</title>"
+echo "<style>"
+echo "body {"
+echo "  background-color: #7CFC00;"
+echo "}"
+echo "</style>"
+echo "</head><body>"
+echo "\$(curl ipinfo.io > /tmp/pubip)"
+echo "Public IP : \$(grep -m 1 ip /tmp/pubip | cut -d '\"' -f 4)"
+echo "<br>"
+echo "Location : \$(grep -m 1 city /tmp/pubip | cut -d '\"' -f 4), \$(grep -m 1 region /tmp/pubip | cut -d '\"' -f 4)"
+echo "<br>"
+echo "<br>"
+echo "\$(ifconfig | grep -A 1 eth0 | grep inet > /tmp/ip)"
+echo "\$(sed -i 's/netmask.*\$//g' /tmp/ip)"
+echo "\$(sed -i 's/inet //g' /tmp/ip)"
+echo "WAN IP : \$(cat /tmp/ip)"
+echo "<br>"
+echo "\$(sudo systemctl status openvpn@client1 | grep 'Active:' | cut -d '(' -f1 | cut -d ')' -f1 > /tmp/vpnstat)"
+echo "\$(sed -i 's/Active/VPN\ Status/g' /tmp/vpnstat && cat /tmp/vpnstat)"
+echo "<br>"
+echo "\$(sudo systemctl status ssh | grep 'Active:' | cut -d '(' -f1 | cut -d ')' -f1 > /tmp/sshstat)"
+echo "<br>"
+echo "\$(sed -i 's/Active/SSH\ Status/g' /tmp/sshstat && cat /tmp/sshstat)"
+echo "</body></html>"
+EOF
+
+# This is just making the code editor not freak out about something above that pissed it off
+sudo sed -i 's/\\"/"/g' /usr/lib/cgi-bin/wanipsimple.cgi
+
+# Give it execute rights
+sudo chmod +x /usr/lib/cgi-bin/wanipsimple.cgi
 
 # Restart the apache service
 sudo systemctl restart apache2
@@ -323,8 +362,8 @@ echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start openvpn@client1, /usr/bin
 echo '%www-data ALL=NOPASSWD: /usr/sbin/shutdown -h now, /usr/sbin/reboot' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -F POSTROUTING' | sudo EDITOR='tee -a' visudo
-echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/7CFC00/FF0000/g' /var/www/html/index.html' | sudo EDITOR='tee -a' visudo
-echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/FF0000/7CFC00/g' /var/www/html/index.html' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/7CFC00/FF0000/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/FF0000/7CFC00/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
 
 # Delete default HTML index file
 sudo rm -rf /var/www/html/index.html
@@ -334,17 +373,14 @@ sudo tee -a /var/www/html/index.html << EOF
 <Content-type: text/html>
 
 <html>
-<meta http-equiv="refresh" content="3;url=index.html" />
+<meta http-equiv="refresh" content="10;url=index.html" />
 <head>
-<style>
-body {
-  background-color: #7CFC00;
-}
 <title>PiSense</title>
-</style>
 </head>
 <body>
 <h1>Welcome to PiSense</h1>
+<br>
+<iframe src="./cgi-bin/wanipsimple.cgi" width="300" height="200"></iframe>
 <br>
 <a href="./cgi-bin/wanip.cgi">WAN IP Information</a>
 <br>
