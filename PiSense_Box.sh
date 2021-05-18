@@ -7,9 +7,6 @@ sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
 sudo systemctl enable apache2
 sudo systemctl restart apache2
 
-# Add www-data to Sudoers
-sudo usermod -aG sudo www-data
-
 # Create CGI Script
 sudo tee -a /usr/lib/cgi-bin/wanip.cgi << EOF
 #!/bin/bash
