@@ -388,10 +388,13 @@ echo \$QUERY_STRING | cut -d '=' -f 3 | cut -d '&' -f 1 > /tmp/second
 second=\$(cat /tmp/second)
 echo "<br>"
 echo "\$(echo \$second)"
+
+
+
 echo "\$(sudo ping \${first} -c 4 > /tmp/pingresult)"
-echo "\$(pingres=\$(cat /tmp/pingresult))"
-echo "\$(if [[ \$pingres ~= *64 bytes* ]]; then echo "Ping Success"; else echo "Ping Failed"; fi)"
-echo "\$(cat /tmp/pingresult)"
+echo "\$(grep '64 bytes' /tmp/pingresult > /tmp/outres)"
+echo "\$(if [[ -s /tmp/outres ]]; then echo 'Ping Successful'; else echo 'Ping Failed'; fi)"
+echo "<br>"
 echo "<br>"
 echo "\$(date)"
 echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
