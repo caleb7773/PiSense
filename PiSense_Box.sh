@@ -349,6 +349,60 @@ sudo sed -i 's/\\"/"/g' /usr/lib/cgi-bin/wanipsimple.cgi
 # Give it execute rights
 sudo chmod +x /usr/lib/cgi-bin/wanipsimple.cgi
 
+# Generate an input html page that will be used be the cgi script
+sudo tee -a /var/www/html/input.html << EOF
+<HTML>
+<head><title>Input Form</title></head>
+<body>
+<H1> Input Form </H1>
+<FORM METHOD=GET ACTION="./cgi-bin/input.cgi" >
+First Name: <INPUT TYPE="text" Name="first" size=40 maxlength=50>
+<br>
+Last Name: <INPUT TYPE="text" Name="last" size=40 maxlength=50>
+<br>
+<INPUT TYPE="submit" value="Submit Form">
+<INPUT TYPE="reset" value="Clear Form">
+</form>
+<hr>
+</body>
+</html>
+EOF
+
+
+# Generate a cgi script that utilizes the html inputs previously grabbed
+sudo tee -a /usr/lib/cgi-bin/input.cgi << EOF
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
+echo "<head><title>Input Form"
+echo "</title></head><body>"
+
+
+echo "<h1> Input Form </h1>"
+echo \$QUERY_STRING | cut -d '=' -f 2 | cut -d '&' -f 1 > /tmp/first
+first=\$(cat /tmp/first)
+echo "<br>"
+echo "\$(echo \$first)"
+echo \$QUERY_STRING | cut -d '=' -f 3 | cut -d '&' -f 1 > /tmp/second
+second=\$(cat /tmp/second)
+echo "<br>"
+echo "\$(echo \$second)"
+echo "<br>"
+echo "\$(date)"
+echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
+
+echo ""
+echo "</body></html>"
+EOF
+
+# Give it execute rights
+sudo chmod +x /usr/lib/cgi-bin/input.cgi
+
+
+
+
 # Restart the apache service
 sudo systemctl restart apache2
 
