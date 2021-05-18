@@ -356,7 +356,7 @@ sudo tee -a /var/www/html/input.html << EOF
 <body>
 <H1> Input Form </H1>
 <FORM METHOD=GET ACTION="./cgi-bin/input.cgi" >
-First Name: <INPUT TYPE="text" Name="first" size=40 maxlength=50>
+IP to Ping: <INPUT TYPE="text" Name="pingip" size=40 maxlength=50>
 <br>
 Last Name: <INPUT TYPE="text" Name="last" size=40 maxlength=50>
 <br>
@@ -375,7 +375,6 @@ sudo tee -a /usr/lib/cgi-bin/input.cgi << EOF
 echo "Content-type: text/html"
 echo ""
 echo "<html>"
-echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
 echo "<head><title>Input Form"
 echo "</title></head><body>"
 
@@ -389,6 +388,10 @@ echo \$QUERY_STRING | cut -d '=' -f 3 | cut -d '&' -f 1 > /tmp/second
 second=\$(cat /tmp/second)
 echo "<br>"
 echo "\$(echo \$second)"
+echo "\$(sudo ping \${first} -c 4 > /tmp/pingresult)"
+echo "\$(pingres=\$(cat /tmp/pingresult))"
+echo "\$(if [[ \$pingres ~= *64 bytes* ]]; then echo "Ping Success"; else echo "Ping Failed"; fi)"
+echo "\$(cat /tmp/pingresult)"
 echo "<br>"
 echo "\$(date)"
 echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
@@ -415,6 +418,8 @@ echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.16
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -F POSTROUTING' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/7CFC00/FF0000/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/FF0000/7CFC00/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /bin/ping' | sudo EDITOR='tee -a' visudo
+
 
 # Delete default HTML index file
 sudo rm -rf /var/www/html/index.html
@@ -444,6 +449,8 @@ sudo tee -a /var/www/html/index.html << EOF
 <a href="./cgi-bin/vpnoff.cgi">Turn VPN Off</a>
 <br>
 <a href="./cgi-bin/bypass.cgi">Allow VPN Bypass</a>
+<br>
+<a href="./input.html">Ping Test</a>
 <br>
 <a href="./cgi-bin/sshstat.cgi">SSH Status</a>
 <br>
