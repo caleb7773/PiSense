@@ -9,7 +9,7 @@ sudo rm -rf /etc/dhcp/dhcpd.conf
 sudo tee -a /etc/dhcp/dhcpd.conf << EOF
 # DHCP Server for Pine
 option domain-name "pine";
-option domain-name-servers 8.8.8.8 1.1.1.1;
+option domain-name-servers 8.8.8.8, 1.1.1.1;
 default-lease-time 600;
 max-lease-time 7200;
 
@@ -30,7 +30,8 @@ INTERFACESv4="eth1"
 EOF
 
 
-
+sudo systemctl enable isc-dhcp-server
+sudo systemctl start isc-dhcp-server
 
 # Enable Forwarding
 sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf && sudo sysctl -p
