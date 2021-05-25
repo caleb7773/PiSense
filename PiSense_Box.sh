@@ -30,8 +30,6 @@ EOF
 
 
 
-# Disable SSH by default
-sudo systemctl disable ssh
 
 # Enable Forwarding
 sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf && sudo sysctl -p
@@ -551,5 +549,8 @@ echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo deb
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
 sudo apt-get install iptables-persistent -y
 
+
+# Disable SSH by default
+sudo systemctl disable ssh
 
 sudo reboot
