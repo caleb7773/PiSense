@@ -542,7 +542,7 @@ EOF
 
 # Set Hostname
 sudo hostnamectl set-hostname PiSense
-sudo sed -i 's/kali/PiSense/g' /etc/hosts
+sudo sed -i 's/localhost/PiSense/g' /etc/hosts
 
 # Enable NAT out VPN Interface
 sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE
