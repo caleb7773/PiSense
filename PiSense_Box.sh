@@ -46,6 +46,7 @@ network:
     ethernets:
         eth0:
             dhcp4: yes
+            optional: true
     version: 2
 EOF
 
@@ -55,6 +56,7 @@ network:
     ethernets:
         eth1:
             dhcp4: no
+            optional: true
             addresses:
                     - 192.168.254.1/29
     version: 2
