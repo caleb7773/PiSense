@@ -1,5 +1,69 @@
 #!/bin/bash
 
+sudo apt install isc-dhcp-server openvpn apache2-bin-y
+
+# Setup DHCP Server
+sudo rm -rf /etc/dhcp/dhcpd.conf
+
+sudo tee -a /etc/dhcp/dhcpd.conf << EOF
+# DHCP Server for Pine
+option domain-name "pine";
+option domain-name-servers 8.8.8.8 1.1.1.1;
+default-lease-time 600;
+max-lease-time 7200;
+
+ddns-update-style  none;
+authoritative;
+
+subnet 192.168.254.0 netmask 255.255.255.248 {
+  range 192.168.254.2 192.168.254.6;
+  option subnet-mask 255.255.255.248;
+  option routers 192.168.254.1;
+  option broadcast-address 192.168.254.7;
+}
+EOF
+
+sudo rm -rf /etc/default/isc-dhcp-server
+sudo tee -a /etc/default/isc-dhcp-server << EOF
+INTERFACESv4="eth1"
+EOF
+
+
+
+# Disable SSH by default
+sudo systemctl disable ssh
+
+# Enable Forwarding
+sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf && sudo sysctl -p
+
+
+# Configure Interfaces in NetPlan
+sudo rm -rf /etc/netplan/*
+
+
+sudo tee -a /etc/netplan/01-eth0.yaml <<EOF
+network:
+    ethernets:
+        eth0:
+            dhcp4: yes
+    version: 2
+EOF
+
+
+sudo tee -a /etc/netplan/02-eth1.yaml <<EOF
+network:
+    ethernets:
+        eth1:
+            dhcp4: no
+            addresses:
+                    - 192.168.254.1/29
+    version: 2
+EOF
+
+sudo netplan apply
+
+
+
 
 
 # Enable CGI Scripts on Apache
@@ -479,3 +543,13 @@ EOF
 # Set Hostname
 sudo hostnamectl set-hostname PiSense
 sudo sed -i 's/kali/PiSense/g' /etc/hosts
+
+# Enable NAT out VPN Interface
+sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE
+
+echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
+echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
+sudo apt-get install iptables-persistent -y
+
+
+sudo reboot
