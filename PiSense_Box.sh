@@ -1,6 +1,6 @@
 #!/bin/bash
 
-b8:27:eb:4d:2d:cc
+
 # Color Changer Script # Changes to Red
 sudo sed -i 's/: #.*/: #FF0000;"/g' /usr/lib/cgi-bin/wanipsimple.cgi
 # Color Changer Script # Changes to Green
