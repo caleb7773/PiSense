@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt install isc-dhcp-server openvpn apache2-bin-y
+sudo apt install isc-dhcp-server openvpn apache2-bin -y
 
 # Setup DHCP Server
 sudo rm -rf /etc/dhcp/dhcpd.conf
