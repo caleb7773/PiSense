@@ -1,5 +1,12 @@
 #!/bin/bash
 
+
+# Color Changer Script # Changes to Red
+sudo sed -i 's/: #.*/: #FF0000;"/g' /usr/lib/cgi-bin/wanipsimple.cgi
+# Color Changer Script # Changes to Green
+sudo sed -i 's/: #.*/: #7CFC00;"/g' /usr/lib/cgi-bin/wanipsimple.cgi
+
+
 sudo apt install isc-dhcp-server openvpn apache2-bin -y
 sudo apt install apache2 -y
 
