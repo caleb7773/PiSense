@@ -441,7 +441,7 @@ IP to Ping: <INPUT TYPE="text" Name="pingip" size=40 maxlength=50>
 <br>
 WiFi SSID: <INPUT TYPE="text" Name="last" size=40 maxlength=50>
 <br>
-WiFi Passphrase: <INPUT TYPE="password" Name="passphrase" size=40 maxlength=50>
+WiFi Passphrase: <INPUT TYPE="text" Name="passphrase" size=40 maxlength=50>
 <br>
 <INPUT TYPE="submit" value="Submit Form">
 <INPUT TYPE="reset" value="Clear Form">
@@ -466,13 +466,8 @@ first=\$(cat /tmp/first)
 echo "<br>"
 echo "\$(echo \$first)"
 
-
-
 echo \$QUERY_STRING | cut -d '=' -f 3 | cut -d '&' -f 1 > /home/www-data/wifi_ssid.txt
-
-
 echo \$QUERY_STRING | cut -d '=' -f 4 | cut -d '&' -f 1 > /home/www-data/wifi_passphrase.txt
-
 
 echo "\$(sed -i 's/+/\ /g' /home/www-data/wifi_passphrase.txt)"
 echo "\$(sed -i 's/%60/\`/g' /home/www-data/wifi_passphrase.txt)"
@@ -542,6 +537,7 @@ echo "<br>"
 passphrase=\$(cat /home/www-data/wifi_passphrase.txt)
 echo "\$(echo Passphrase: \$passphrase)"
 echo "<br>"
+echo "\$(wpa_passphrase "\${wifi}" "\${passphrase}" >> /etc/wpa_supplicant.conf)" 
 echo "\$(sudo ping \${first} -c 4 > /tmp/pingresult)"
 echo "\$(grep '64 bytes' /tmp/pingresult > /tmp/outres)"
 echo "\$(if [[ -s /tmp/outres ]]; then echo 'Ping Successful'; else echo 'Ping Failed'; fi)"
@@ -630,6 +626,10 @@ EOF
 # Set Hostname
 sudo hostnamectl set-hostname PiSense
 sudo sed -i 's/localhost/PiSense/g' /etc/hosts
+
+# Set WPA_Supplicant to www-data
+sudo touch /etc/wpa_supplicant.conf
+sudo chown www-data:www-data /etc/wpa_supplicant.conf
 
 # Enable NAT out VPN Interface
 sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE
