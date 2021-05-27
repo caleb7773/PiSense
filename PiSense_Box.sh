@@ -133,6 +133,7 @@ echo "</title></head><body>"
 
 
 echo "<h1> SSH Status </h1>"
+echo "\$(sudo systemctl stop ssh)"
 echo "\$(sudo systemctl start ssh)"
 echo "\$(sudo systemctl status ssh | grep 'Active:')"
 
@@ -190,6 +191,7 @@ echo "<h1> VPN Status </h1>"
 echo "\$(sudo sed -i 's/FF0000/7CFC00/g' /usr/lib/cgi-bin/wanipsimple.cgi)"
 echo "\$(sudo iptables -t nat -F POSTROUTING)"
 echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE)"
+echo "\$(sudo systemctl stop openvpn@client1)"
 echo "\$(sudo systemctl start openvpn@client1)"
 echo "\$(sudo systemctl status openvpn@client1 | grep 'Active:')"
 
