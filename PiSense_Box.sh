@@ -660,6 +660,7 @@ echo "\$(echo Passphrase: \$passphrase)"
 echo "<br>"
 echo "\$(wpa_passphrase "\${wifi}" "\${passphrase}" >> /etc/wpa_supplicant.conf)" 
 echo "<br>"
+sudo wpa_supplicant -B -c /home/www-data/wpa_supplicant.conf -i wlan0
 echo "<br>"
 echo "\$(date)"
 echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
@@ -683,6 +684,7 @@ echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start openvpn@client1, /usr/bin
 echo '%www-data ALL=NOPASSWD: /usr/sbin/shutdown -h now, /usr/sbin/reboot' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o wlan0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -F POSTROUTING' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/sbin/wpa_supplicant -B -c /home/www-data/wpa_supplicant.conf -i wlan0' | sudo EDITOR='tee -a' visduo
 echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/7CFC00/FF0000/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/FF0000/7CFC00/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i' | sudo EDITOR='tee -a' visudo
