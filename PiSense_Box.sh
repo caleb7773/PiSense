@@ -42,6 +42,8 @@ sudo systemctl start isc-dhcp-server
 
 # Enable Forwarding
 sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf && sudo sysctl -p
+sudo sed -i 's/#net.ipv6.conf.all.disable_ipv6=1/net.ipv6.conf.all.disable_ipv6=1/g' /etc/sysctl.conf && sudo sysctl -p
+sudo sed -i 's/#net.ipv6.conf.default.disable_ipv6=1/net.ipv6.conf.default.disable_ipv6=1/g' /etc/sysctl.conf && sudo sysctl -p
 
 
 # Configure Interfaces in NetPlan
@@ -52,8 +54,8 @@ sudo tee -a /etc/netplan/02-eth1.yaml <<EOF
 network:
     ethernets:
         eth1:
-            dhcp4: yes
             optional: true
+            dhcp4: yes
     version: 2
 EOF
 
@@ -62,8 +64,8 @@ sudo tee -a /etc/netplan/01-eth0.yaml <<EOF
 network:
     ethernets:
         eth0:
-            dhcp4: no
             optional: true
+            dhcp4: no
             addresses:
                     - 192.168.254.1/29
     version: 2
