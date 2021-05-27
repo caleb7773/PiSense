@@ -662,6 +662,7 @@ echo "\$(wpa_passphrase "\${wifi}" "\${passphrase}" >> /etc/wpa_supplicant.conf)
 echo "<br>"
 sudo wpa_supplicant -B -c /home/www-data/wpa_supplicant.conf -i wlan0
 echo "<br>"
+echo "<br>"
 echo "\$(date)"
 echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
 echo ""
