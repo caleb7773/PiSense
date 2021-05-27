@@ -51,7 +51,7 @@ sudo rm -rf /etc/netplan/*
 sudo tee -a /etc/netplan/02-eth1.yaml <<EOF
 network:
     ethernets:
-        eth0:
+        eth1:
             dhcp4: yes
             optional: true
     version: 2
@@ -61,7 +61,7 @@ EOF
 sudo tee -a /etc/netplan/01-eth0.yaml <<EOF
 network:
     ethernets:
-        eth1:
+        eth0:
             dhcp4: no
             optional: true
             addresses:
