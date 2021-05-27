@@ -33,7 +33,7 @@ EOF
 
 sudo rm -rf /etc/default/isc-dhcp-server
 sudo tee -a /etc/default/isc-dhcp-server << EOF
-INTERFACESv4="eth1"
+INTERFACESv4="eth0"
 EOF
 
 
@@ -48,7 +48,7 @@ sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf 
 sudo rm -rf /etc/netplan/*
 
 
-sudo tee -a /etc/netplan/01-eth0.yaml <<EOF
+sudo tee -a /etc/netplan/02-eth1.yaml <<EOF
 network:
     ethernets:
         eth0:
@@ -58,7 +58,7 @@ network:
 EOF
 
 
-sudo tee -a /etc/netplan/02-eth1.yaml <<EOF
+sudo tee -a /etc/netplan/01-eth0.yaml <<EOF
 network:
     ethernets:
         eth1:
@@ -98,8 +98,8 @@ echo "<head><title>WAN IP"
 echo "</title></head><body>"
 
 echo "<h1>IP Information</h1>"
-echo "\$(ifconfig | grep eth0 > /tmp/int)"
-echo "\$(ifconfig | grep -A 1 eth0 | grep inet > /tmp/ip)"
+echo "\$(ifconfig | grep eth1 > /tmp/int)"
+echo "\$(ifconfig | grep -A 1 eth1 | grep inet > /tmp/ip)"
 echo "\$(sed -i 's/netmask.*\$//g' /tmp/ip)"
 echo "\$(sed -i 's/inet //g' /tmp/ip)"
 
@@ -379,7 +379,7 @@ echo "\$(sudo sed -i 's/7CFC00/FF0000/g' /usr/lib/cgi-bin/wanipsimple.cgi)"
 echo "\$(sudo systemctl stop openvpn@client1)"
 echo "\$(sudo systemctl status openvpn@client1 | grep 'Active:')"
 echo "\$(sudo iptables -t nat -F POSTROUTING)"
-echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE)"
+echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth1 -j MASQUERADE)"
 echo "\$(sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o wlan0 -j MASQUERADE)"
 echo "<br>"
 echo "\$(date)"
@@ -412,7 +412,7 @@ echo "<br>"
 echo "Location : \$(grep -m 1 city /tmp/pubip | cut -d '\"' -f 4), \$(grep -m 1 region /tmp/pubip | cut -d '\"' -f 4)"
 echo "<br>"
 echo "<br>"
-echo "\$(ifconfig | grep -A 1 eth0 | grep inet > /tmp/ip)"
+echo "\$(ifconfig | grep -A 1 eth1 | grep inet > /tmp/ip)"
 echo "\$(sed -i 's/netmask.*\$//g' /tmp/ip)"
 echo "\$(sed -i 's/inet //g' /tmp/ip)"
 echo "WAN IP : \$(cat /tmp/ip)"
@@ -629,7 +629,7 @@ echo '' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start ssh, /usr/bin/systemctl stop ssh, /usr/bin/systemctl status ssh' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start openvpn@client1, /usr/bin/systemctl stop openvpn@client1, /usr/bin/systemctl status openvpn@client1' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/shutdown -h now, /usr/sbin/reboot' | sudo EDITOR='tee -a' visudo
-echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o wlan0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o wlan0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth1 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -F POSTROUTING' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/killall wpa_supplicant' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/wpa_supplicant -B -c /home/www-data/wpa_supplicant.conf -i wlan0' | sudo EDITOR='tee -a' visudo
@@ -662,7 +662,7 @@ sudo tee -a /var/www/html/index.html << EOF
 <br>
 <a href="./cgi-bin/vpnstat.cgi">VPN Status</a>
 <br>
-<a href="./cgi-bin/vpnon.cgi">Turn VPN On</a> (autostart by default)
+<a href="./cgi-bin/vpnon.cgi">Turn VPN On</a>
 <br>
 <a href="./cgi-bin/vpnoff.cgi">Turn VPN Off</a>
 <br>
