@@ -7,7 +7,7 @@
 #sudo sed -i 's/: #.*/: #7CFC00;"/g' /usr/lib/cgi-bin/wanipsimple.cgi
 
 
-sudo apt install isc-dhcp-server openvpn apache2-bin -y
+sudo apt install isc-dhcp-server openvpn apache2-bin net-tools -y
 sudo apt install apache2 -y
 
 # Setup DHCP Server
