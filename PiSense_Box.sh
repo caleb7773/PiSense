@@ -596,6 +596,28 @@ EOF
 # Give it execute rights
 sudo chmod +x /usr/lib/cgi-bin/wifi.cgi
 
+# Generate Service Script
+sudo tee -a /usr/lib/cgi-bin/wifirestart.cgi << EOF
+#!/bin/bash
+echo "Content-type: text/html"
+echo ""
+echo "<html>"
+echo "<meta http-equiv="refresh" content="4\;url=../index.html" />"
+echo "<head><title>Restarting WiFi"
+echo "</title></head><body>"
+echo "<h1> Restarting WiFi... </h1>"
+echo "\$(sudo killall wpa_supplicant)"
+echo "\$(sudo wpa_supplicant -B -c /home/www-data/wpa_supplicant.conf -i wlan0)"
+echo "<br>"
+echo "\$(date)"
+echo "<h2><a href="../index.html">Return to Main Menu</a></h3>"
+echo ""
+echo "</body></html>"
+EOF
+
+# Give it execute rights
+sudo chmod +x /usr/lib/cgi-bin/wifirestart.cgi 
+
 
 
 
@@ -609,6 +631,7 @@ echo '%www-data ALL=NOPASSWD: /usr/bin/systemctl start openvpn@client1, /usr/bin
 echo '%www-data ALL=NOPASSWD: /usr/sbin/shutdown -h now, /usr/sbin/reboot' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o wlan0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE, /usr/sbin/iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o eth0 -j MASQUERADE' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/iptables -t nat -F POSTROUTING' | sudo EDITOR='tee -a' visudo
+echo '%www-data ALL=NOPASSWD: /usr/bin/killall wpa_supplicant' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/sbin/wpa_supplicant -B -c /home/www-data/wpa_supplicant.conf -i wlan0' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/7CFC00/FF0000/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
 echo '%www-data ALL=NOPASSWD: /usr/bin/sed -i 's/FF0000/7CFC00/g' /usr/lib/cgi-bin/wanipsimple.cgi' | sudo EDITOR='tee -a' visudo
@@ -648,6 +671,8 @@ sudo tee -a /var/www/html/index.html << EOF
 <a href="./input.html">Ping Test</a>
 <br>
 <a href="./wifi.html">WiFi Connect</a>
+<br>
+<a href="./cgi-bin/wifirestart.cgi">WiFi Start</a>
 <br>
 <a href="./cgi-bin/sshstat.cgi">SSH Status</a>
 <br>
