@@ -41,9 +41,11 @@ sudo systemctl enable isc-dhcp-server
 sudo systemctl start isc-dhcp-server
 
 # Enable Forwarding
+sudo tee -a /etc/sysctl.conf << EOF
+net.ipv6.conf.all.disable_ipv6=1
+net.ipv6.conf.default.disable_ipv6=1
+EOF
 sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf && sudo sysctl -p
-sudo sed -i 's/#net.ipv6.conf.all.disable_ipv6=1/net.ipv6.conf.all.disable_ipv6=1/g' /etc/sysctl.conf && sudo sysctl -p
-sudo sed -i 's/#net.ipv6.conf.default.disable_ipv6=1/net.ipv6.conf.default.disable_ipv6=1/g' /etc/sysctl.conf && sudo sysctl -p
 
 
 # Configure Interfaces in NetPlan
