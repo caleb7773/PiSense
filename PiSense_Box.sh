@@ -441,10 +441,6 @@ sudo tee -a /var/www/html/input.html << EOF
 <FORM METHOD=GET ACTION="./cgi-bin/input.cgi" >
 IP to Ping: <INPUT TYPE="text" Name="pingip" size=40 maxlength=50>
 <br>
-WiFi SSID: <INPUT TYPE="text" Name="last" size=40 maxlength=50>
-<br>
-WiFi Passphrase: <INPUT TYPE="text" Name="passphrase" size=40 maxlength=50>
-<br>
 <INPUT TYPE="submit" value="Submit Form">
 <INPUT TYPE="reset" value="Clear Form">
 </form>
@@ -468,78 +464,6 @@ first=\$(cat /tmp/first)
 echo "<br>"
 echo "\$(echo \$first)"
 
-echo \$QUERY_STRING | cut -d '=' -f 3 | cut -d '&' -f 1 > /home/www-data/wifi_ssid.txt
-echo \$QUERY_STRING | cut -d '=' -f 4 | cut -d '&' -f 1 > /home/www-data/wifi_passphrase.txt
-
-echo "\$(sed -i 's/+/\ /g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%60/\`/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%3D/\=/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%5B/\[/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%5D/\]/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%5C/\\/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%3B/\;/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i "s/%27/\'/g" /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%2C/\,/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%2F/\//g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%7E/\~/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%21/\!/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%40/\@/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%23/\#/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%24/\$/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%25/\%/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%5E/\^/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%26/\&/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%28/\(/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%29/\)/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%2B/\+/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%7B/\{/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%7D/\}/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%7C/\|/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%3A/\:/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%22/\"/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%3C/\</g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%3E/\>/g' /home/www-data/wifi_passphrase.txt)"
-echo "\$(sed -i 's/%3F/\?/g' /home/www-data/wifi_passphrase.txt)"
-
-echo "\$(sed -i 's/+/\ /g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%60/\`/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%3D/\=/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%5B/\[/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%5D/\]/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%5C/\\/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%3B/\;/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i "s/%27/\'/g" /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%2C/\,/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%2F/\//g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%7E/\~/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%21/\!/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%40/\@/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%23/\#/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%24/\$/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%25/\%/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%5E/\^/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%26/\&/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%28/\(/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%29/\)/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%2B/\+/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%7B/\{/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%7D/\}/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%7C/\|/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%3A/\:/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%22/\"/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%3C/\</g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%3E/\>/g' /home/www-data/wifi_ssid.txt)"
-echo "\$(sed -i 's/%3F/\?/g' /home/www-data/wifi_ssid.txt)"
-
-
-echo "<br>"
-wifi=\$(cat /home/www-data/wifi_ssid.txt)
-echo "\$(echo SSID: \$wifi)"
-echo "<br>"
-passphrase=\$(cat /home/www-data/wifi_passphrase.txt)
-echo "\$(echo Passphrase: \$passphrase)"
-echo "<br>"
-echo "\$(wpa_passphrase "\${wifi}" "\${passphrase}" >> /etc/wpa_supplicant.conf)" 
 echo "\$(sudo ping \${first} -c 4 > /tmp/pingresult)"
 echo "\$(grep '64 bytes' /tmp/pingresult > /tmp/outres)"
 echo "\$(if [[ -s /tmp/outres ]]; then echo 'Ping Successful'; else echo 'Ping Failed'; fi)"
