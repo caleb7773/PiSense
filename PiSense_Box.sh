@@ -58,6 +58,17 @@ network:
         eth1:
             optional: true
             dhcp4: yes
+            dhcp6: no
+    version: 2
+EOF
+
+sudo tee -a /etc/netplan/03-wlan0.yaml <<EOF
+network:
+    ethernets:
+        wlan0:
+            optional: true
+            dhcp4: yes
+            dhcp6: no
     version: 2
 EOF
 
