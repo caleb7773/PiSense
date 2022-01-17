@@ -728,8 +728,6 @@ sudo sed -i 's/localhost/PiSense/g' /etc/hosts
 sudo touch /etc/wpa_supplicant.conf
 sudo chown www-data:www-data /etc/wpa_supplicant.conf
 
-# Enable NAT out VPN Interface
-sudo iptables -t nat -A POSTROUTING -s 192.168.254.0/29 -o pine0 -j MASQUERADE
 
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
