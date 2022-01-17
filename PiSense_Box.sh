@@ -729,8 +729,26 @@ sudo touch /etc/wpa_supplicant.conf
 sudo chown www-data:www-data /etc/wpa_supplicant.conf
 
 
+
+sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -i eth0 -j ACCEPT
+sudo iptables -A INPUT -i eth1 -j DROP
+sudo iptables -A INPUT -i wlan0 -j DROP
+
+sudo iptables -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+sudo iptables -A OUTPUT -m conntrack --ctstate INVALID -j DROP
+sudo iptables -A OUTPUT -p tcp -m multiport --dport 53,80,443 -j ACCEPT
+sudo iptables -A OUTPUT -p udp -m multiport --dport 53,67,68,123 -j ACCEPT
+sudo iptables -A OUTPUT -o lo -j ACCEPT
+sudo iptables -A OUTPUT -p icmp -j ACCEPT
+sudo iptables -P OUTPUT DROP
+sudo iptables -P INPUT DROP
+
+
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
-echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
+echo iptables-persistent iptables-persistent/autosave_v6 boolean false | sudo debconf-set-selections
 sudo apt-get install iptables-persistent -y
 
 
