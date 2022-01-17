@@ -749,6 +749,9 @@ sudo iptables -P INPUT DROP
 
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean false | sudo debconf-set-selections
+
+# Currently this will fail if you are using the ETH0 Interface to access the internet
+# This is because ETH0 gets a static IP address and it will no longer be able to access the internet.
 sudo apt-get install iptables-persistent -y
 
 
